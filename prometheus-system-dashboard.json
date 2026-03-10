@@ -303,19 +303,19 @@
     "list": [
       {
         "current": { "selected": true, "text": "All", "value": "$__all" },
-        "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "definition": "label_values(node_uname_info, nodename)",
         "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "node",
-        "options": [],
-        "query": { "query": "label_values(node_uname_info, nodename)", "refId": "StandardVariableQuery" },
-        "refresh": 2,
-        "regex": "",
+        "options": [
+          { "selected": true, "text": "All", "value": "$__all" },
+          { "selected": false, "text": "immich", "value": "immich" },
+          { "selected": false, "text": "backup", "value": "backup" },
+          { "selected": false, "text": "backup-remote", "value": "backup-remote" }
+        ],
+        "query": "immich,backup,backup-remote",
         "skipUrlSync": false,
-        "sort": 1,
-        "type": "query",
+        "type": "custom",
         "label": "Node"
       }
     ]
