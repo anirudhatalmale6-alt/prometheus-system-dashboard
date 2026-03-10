@@ -29,7 +29,7 @@
       }
     ]
   },
-  "description": "Minimal system dashboard — Backup status + per-instance DISK / CPU / RAM. Clean and compact.",
+  "description": "Minimal system dashboard — Backup status + per-node DISK / CPU / RAM. Clean and compact.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -121,7 +121,7 @@
       "gridPos": { "h": 4, "w": 8, "x": 0, "y": 7 },
       "id": 20,
       "maxPerRow": 3,
-      "repeat": "instance",
+      "repeat": "node",
       "repeatDirection": "h",
       "options": {
         "colorMode": "background",
@@ -132,13 +132,13 @@
         "textMode": "value_and_name",
         "text": { "titleSize": 20, "valueSize": 30 }
       },
-      "title": "DISK — $instance",
+      "title": "DISK — $node",
       "description": "Disk space used on root filesystem.",
       "type": "stat",
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "node_filesystem_size_bytes{instance=\"$instance\", mountpoint=\"/\", fstype!=\"rootfs\"} - node_filesystem_avail_bytes{instance=\"$instance\", mountpoint=\"/\", fstype!=\"rootfs\"}",
+          "expr": "(node_filesystem_size_bytes{mountpoint=\"/\", fstype!=\"rootfs\"} - node_filesystem_avail_bytes{mountpoint=\"/\", fstype!=\"rootfs\"}) * on(instance) group_left(nodename) node_uname_info{nodename=\"$node\"}",
           "legendFormat": "Used",
           "instant": true,
           "refId": "A"
@@ -168,7 +168,7 @@
       "gridPos": { "h": 5, "w": 8, "x": 0, "y": 11 },
       "id": 30,
       "maxPerRow": 3,
-      "repeat": "instance",
+      "repeat": "node",
       "repeatDirection": "h",
       "options": {
         "colorMode": "background",
@@ -179,13 +179,13 @@
         "textMode": "value_and_name",
         "text": { "titleSize": 20, "valueSize": 30 }
       },
-      "title": "CPU — $instance",
+      "title": "CPU — $node",
       "description": "CPU utilization with sparkline trend.",
       "type": "stat",
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "100 - (avg(irate(node_cpu_seconds_total{instance=\"$instance\", mode=\"idle\"}[5m])) * 100)",
+          "expr": "100 - (avg(irate(node_cpu_seconds_total{mode=\"idle\"}[5m]) * on(instance) group_left(nodename) node_uname_info{nodename=\"$node\"}) * 100)",
           "legendFormat": "CPU %",
           "refId": "A"
         }
@@ -214,7 +214,7 @@
       "gridPos": { "h": 5, "w": 8, "x": 0, "y": 16 },
       "id": 40,
       "maxPerRow": 3,
-      "repeat": "instance",
+      "repeat": "node",
       "repeatDirection": "h",
       "options": {
         "colorMode": "background",
@@ -225,13 +225,13 @@
         "textMode": "value_and_name",
         "text": { "titleSize": 20, "valueSize": 30 }
       },
-      "title": "RAM — $instance",
+      "title": "RAM — $node",
       "description": "Memory utilization with sparkline trend.",
       "type": "stat",
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "100 * (1 - ((node_memory_MemAvailable_bytes{instance=\"$instance\"} or node_memory_MemFree_bytes{instance=\"$instance\"} + node_memory_Buffers_bytes{instance=\"$instance\"} + node_memory_Cached_bytes{instance=\"$instance\"}) / node_memory_MemTotal_bytes{instance=\"$instance\"}))",
+          "expr": "100 * (1 - (node_memory_MemAvailable_bytes * on(instance) group_left(nodename) node_uname_info{nodename=\"$node\"}) / (node_memory_MemTotal_bytes * on(instance) group_left(nodename) node_uname_info{nodename=\"$node\"}))",
           "legendFormat": "RAM %",
           "refId": "A"
         }
@@ -247,19 +247,19 @@
       {
         "current": { "selected": true, "text": "All", "value": "$__all" },
         "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-        "definition": "label_values(node_uname_info, instance)",
+        "definition": "label_values(node_uname_info, nodename)",
         "hide": 0,
         "includeAll": true,
         "multi": true,
-        "name": "instance",
+        "name": "node",
         "options": [],
-        "query": { "query": "label_values(node_uname_info, instance)", "refId": "StandardVariableQuery" },
+        "query": { "query": "label_values(node_uname_info, nodename)", "refId": "StandardVariableQuery" },
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
         "type": "query",
-        "label": "Instance"
+        "label": "Node"
       }
     ]
   },
@@ -270,6 +270,6 @@
   "timezone": "browser",
   "title": "System Overview",
   "uid": "system-overview-minimal",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }
