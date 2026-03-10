@@ -101,9 +101,9 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 2, "w": 8, "x": 0, "y": 6 },
+      "gridPos": { "h": 2, "w": 6, "x": 0, "y": 6 },
       "id": 15,
-      "maxPerRow": 3,
+      "maxPerRow": 4,
       "repeat": "node",
       "repeatDirection": "h",
       "options": {
@@ -131,55 +131,43 @@
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 25,
-            "gradientMode": "opacity",
-            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": { "type": "linear" },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": { "group": "A", "mode": "none" },
-            "thresholdsStyle": { "mode": "off" }
-          },
-          "unit": "bytes",
+          "color": { "mode": "thresholds" },
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null }
+              { "color": "#FF9830", "value": null },
+              { "color": "red", "value": 85 }
             ]
           },
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
           "mappings": []
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 8 },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 8 },
       "id": 20,
-      "maxPerRow": 3,
+      "maxPerRow": 4,
       "repeat": "node",
       "repeatDirection": "h",
       "options": {
-        "legend": { "calcs": ["lastNotNull"], "displayMode": "list", "placement": "bottom", "showLegend": true },
-        "tooltip": { "mode": "single", "sort": "none" }
+        "displayMode": "basic",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showUnfilled": true,
+        "minVizWidth": 8,
+        "minVizHeight": 16,
+        "text": { "titleSize": 14, "valueSize": 20 }
       },
       "title": "DISK",
-      "type": "timeseries",
+      "type": "bargauge",
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "(node_filesystem_size_bytes{mountpoint=\"/\"} - node_filesystem_avail_bytes{mountpoint=\"/\"}) * on(instance) group_left(nodename) node_uname_info{nodename=~\"$node\"}",
+          "expr": "((node_filesystem_size_bytes{mountpoint=\"/\"} - node_filesystem_avail_bytes{mountpoint=\"/\"}) / node_filesystem_size_bytes{mountpoint=\"/\"}) * on(instance) group_left(nodename) node_uname_info{nodename=~\"$node\"}",
           "legendFormat": "Used",
+          "instant": true,
           "refId": "A"
         }
       ]
@@ -225,9 +213,9 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 },
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 12 },
       "id": 30,
-      "maxPerRow": 3,
+      "maxPerRow": 4,
       "repeat": "node",
       "repeatDirection": "h",
       "options": {
@@ -286,9 +274,9 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 24 },
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 20 },
       "id": 40,
-      "maxPerRow": 3,
+      "maxPerRow": 4,
       "repeat": "node",
       "repeatDirection": "h",
       "options": {
@@ -339,6 +327,6 @@
   "timezone": "browser",
   "title": "System Overview",
   "uid": "system-overview-v9",
-  "version": 10,
+  "version": 11,
   "weekStart": ""
 }
