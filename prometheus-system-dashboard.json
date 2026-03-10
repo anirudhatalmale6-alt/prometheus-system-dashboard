@@ -13,8 +13,7 @@
   "__requires": [
     { "type": "grafana", "id": "grafana", "name": "Grafana", "version": "9.0.0" },
     { "type": "datasource", "id": "prometheus", "name": "Prometheus", "version": "1.0.0" },
-    { "type": "panel", "id": "stat", "name": "Stat", "version": "" },
-    { "type": "panel", "id": "gauge", "name": "Gauge", "version": "" }
+    { "type": "panel", "id": "stat", "name": "Stat", "version": "" }
   ],
   "annotations": {
     "list": [
@@ -29,7 +28,7 @@
       }
     ]
   },
-  "description": "Minimal system dashboard — Backup status + per-node DISK / CPU / RAM. Clean and compact.",
+  "description": "Minimal system dashboard — Backup status + per-node DISK / CPU / RAM.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -138,7 +137,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "(node_filesystem_size_bytes{mountpoint=\"/\", fstype!=\"rootfs\"} - node_filesystem_avail_bytes{mountpoint=\"/\", fstype!=\"rootfs\"}) * on(instance) group_left(nodename) node_uname_info{nodename=\"$node\"}",
+          "expr": "node_filesystem_size_bytes{instance=\"$instance\", mountpoint=\"/\", fstype!=\"rootfs\"} - node_filesystem_avail_bytes{instance=\"$instance\", mountpoint=\"/\", fstype!=\"rootfs\"}",
           "legendFormat": "Used",
           "instant": true,
           "refId": "A"
@@ -185,7 +184,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "100 - (avg(irate(node_cpu_seconds_total{mode=\"idle\"}[5m]) * on(instance) group_left(nodename) node_uname_info{nodename=\"$node\"}) * 100)",
+          "expr": "100 - (avg(irate(node_cpu_seconds_total{instance=\"$instance\", mode=\"idle\"}[5m])) * 100)",
           "legendFormat": "CPU %",
           "refId": "A"
         }
@@ -231,7 +230,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "100 * (1 - (node_memory_MemAvailable_bytes * on(instance) group_left(nodename) node_uname_info{nodename=\"$node\"}) / (node_memory_MemTotal_bytes * on(instance) group_left(nodename) node_uname_info{nodename=\"$node\"}))",
+          "expr": "100 * (1 - (node_memory_MemAvailable_bytes{instance=\"$instance\"} / node_memory_MemTotal_bytes{instance=\"$instance\"}))",
           "legendFormat": "RAM %",
           "refId": "A"
         }
@@ -260,6 +259,23 @@
         "sort": 1,
         "type": "query",
         "label": "Node"
+      },
+      {
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(node_uname_info{nodename=~\"$node\"}, instance)",
+        "hide": 2,
+        "includeAll": true,
+        "multi": true,
+        "name": "instance",
+        "options": [],
+        "query": { "query": "label_values(node_uname_info{nodename=~\"$node\"}, instance)", "refId": "StandardVariableQuery" },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query",
+        "label": "Instance"
       }
     ]
   },
@@ -269,7 +285,7 @@
   },
   "timezone": "browser",
   "title": "System Overview",
-  "uid": "system-overview-minimal",
-  "version": 4,
+  "uid": "system-overview-minimal-v5",
+  "version": 5,
   "weekStart": ""
 }
