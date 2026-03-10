@@ -28,7 +28,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$ds" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -68,7 +68,7 @@
       "type": "stat",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$ds" },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "(time() - backup_timestamp) < bool 86400",
           "legendFormat": "{{host}}",
           "instant": true,
@@ -85,7 +85,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$ds" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -118,7 +118,7 @@
       "type": "stat",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$ds" },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "node_filesystem_size_bytes{instance=\"$instance\", fstype=~\"ext.*|xfs|btrfs\", mountpoint=\"/\"} - node_filesystem_avail_bytes{instance=\"$instance\", fstype=~\"ext.*|xfs|btrfs\", mountpoint=\"/\"}",
           "legendFormat": "Used",
           "instant": true,
@@ -127,7 +127,7 @@
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$ds" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -164,7 +164,7 @@
       "type": "stat",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$ds" },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "100 - (avg by(instance) (irate(node_cpu_seconds_total{instance=\"$instance\", mode=\"idle\"}[5m])) * 100)",
           "legendFormat": "CPU %",
           "refId": "A"
@@ -172,7 +172,7 @@
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$ds" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -209,7 +209,7 @@
       "type": "stat",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$ds" },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "100 * (1 - (node_memory_MemAvailable_bytes{instance=\"$instance\"} / node_memory_MemTotal_bytes{instance=\"$instance\"}))",
           "legendFormat": "RAM %",
           "refId": "A"
@@ -224,22 +224,8 @@
   "templating": {
     "list": [
       {
-        "current": { "selected": true, "text": "Prometheus", "value": "Prometheus" },
-        "hide": 0,
-        "includeAll": false,
-        "multi": false,
-        "name": "ds",
-        "options": [],
-        "query": "prometheus",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "type": "datasource",
-        "label": "Data Source"
-      },
-      {
         "current": { "selected": true, "text": "All", "value": "$__all" },
-        "datasource": { "type": "prometheus", "uid": "$ds" },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
         "definition": "label_values(node_uname_info, instance)",
         "hide": 0,
         "includeAll": true,
@@ -262,7 +248,7 @@
   },
   "timezone": "browser",
   "title": "System Overview",
-  "uid": "system-overview-v6",
-  "version": 6,
+  "uid": "system-overview-v7",
+  "version": 7,
   "weekStart": ""
 }
