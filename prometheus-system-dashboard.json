@@ -69,11 +69,19 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "(time() - backup_timestamp) < bool 86400",
-          "legendFormat": "{{host}}",
+          "expr": "min((time() - backup_timestamp{host=~\"immich|backup\"}) < bool 86400)",
+          "legendFormat": "local",
           "instant": true,
           "format": "time_series",
           "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "(time() - backup_timestamp{host=\"backup-remote\"}) < bool 86400",
+          "legendFormat": "remote",
+          "instant": true,
+          "format": "time_series",
+          "refId": "B"
         }
       ]
     },
